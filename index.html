@@ -1964,30 +1964,26 @@
       resetScores();
     }
 
-      function shareToLine() {
-        /*
-      const text = lastShareText || "ลองเล่นเกมค้นหา What kind of diamond are you?";
-      const url = "https://line.me/R/msg/text/?" + encodeURIComponent(text);
-      window.open(url, "_blank");
-      */
-          const nameEl = document.getElementById("result-name");
-          const resultName = nameEl ? nameEl.innerText : "Diamond Archetype";
+    function shareToLine() {
+        console.log("กำลังเรียกใช้ฟังก์ชันแชร์ Line..."); // ใส่ไว้เช็คใน Console ว่าฟังก์ชันทำงานไหม
 
-          // 1. ดึง Path รูปจากหน้าจอ (เช่น images/orbit.png)
-          const imgElement = document.getElementById("result-image");
-          const relativeImgPath = imgElement.getAttribute("src");
+        // ป้องกันกรณี lastShareText ไม่มีค่า
+        let text = "";
+        if (typeof lastShareText !== 'undefined' && lastShareText) {
+            text = lastShareText;
+        } else {
+            text = "ค้นหาเพชรที่ใช่ในสไตล์คุณกับ Beauty Diamond";
+        }
 
-          // 2. แปลงให้เป็น URL สมบูรณ์ (เช่น https://yourdomain.com/images/orbit.png)
-          // window.location.origin จะได้ http://127.0.0.1 หรือชื่อเว็บของคุณ
-          const fullImgUrl = window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '/') + relativeImgPath;
+        // ตัดข้อความให้สั้นลงเพื่อป้องกัน Error 414
+        const shortText = text.substring(0, 100);
+        const pageUrl = window.location.href.split("#")[0];
+        const fullContent = shortText + "\n\nเล่นได้ที่นี่: " + pageUrl;
 
-          const pageUrl = window.location.href.split("#")[0];
+        const lineUrl = "https://line.me/R/msg/text/?" + encodeURIComponent(fullContent);
 
-          // 3. ใส่ลิงก์รูปลงไปในข้อความแชร์ด้วย
-          const text = `ฉันได้อัญมณีประเภท: ${resultName}\n\nดูรูปผลลัพธ์ของฉัน: ${fullImgUrl}\n\nลองเล่นได้ที่นี่: ${pageUrl}`;
-
-          const url = "https://line.me/R/msg/text/?" + encodeURIComponent(text);
-          window.location.href = url;
+        // ลองเปลี่ยนจาก window.location.href เป็น window.open เพื่อทดสอบ
+        window.open(lineUrl, '_blank');
     }
 
     function shareToFacebook() {
